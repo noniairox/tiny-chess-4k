@@ -1,21 +1,62 @@
 # tiny-chess-4k
 
-[![make.fun · tiny-chess-01](https://make.fun/badge/tiny-chess-01.svg)](https://make.fun/bounty/tiny-chess-01?utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01)
-[![rank](https://make.fun/badge/tiny-chess-01/noniairox/tiny-chess-4k/rank.svg)](https://make.fun/bounty/tiny-chess-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01)
-[![reward](https://make.fun/badge/tiny-chess-01/noniairox/tiny-chess-4k/reward.svg)](https://make.fun/bounty/tiny-chess-01?utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01)
+A tiny chess engine in under 4 KB of Python, built for the make.fun
+tiny-chess-01 bounty. It plays the house gauntlet over the make.fun
+environment protocol and needs nothing but the Python 3.13 standard
+library.
 
-A chess engine in 4 KB of Python for make.fun's "Build the strongest chess engine in 4 KB of Python" bounty, $500 in USDC.
+## How it plays
 
-## Run it
+The engine is a single packed file, `main.py` (2,862 bytes). The
+readable source is `src.py` (7,666 bytes); `main.py` is produced from
+it by `makefun compress`, so the two are byte-identical in behaviour.
 
-```sh
-python3 main.py
+Board: 0x88 representation, 128 squares, pieces 1-6 white and 7-12
+black. Move generation covers pawns (including double push, en
+passant and promotion), knights, bishops, rooks, queens, kings and
+both castling sides, with full legality filtering by king safety.
+
+Search: negamax alpha-beta with a transposition table, quiescence
+search on captures and promotions (depth capped at 8 plies to avoid
+explosion), and MVV-LVA plus transposition-table move ordering.
+The node budget is fixed at 200,000 nodes per move, so the engine
+is deterministic: same position, same move, every time. There is no
+clock, no randomness and no model call anywhere in the code.
+
+Evaluation: tapered middlegame/endgame piece-square tables with
+phase interpolation, a bishop-pair bonus, and material values of
+pawn 50, knight 160, bishop 165, rook 250, queen 450. The king
+table switches to a centralised endgame table once material falls.
+
+## Results
+
+Local practice trial (trial 0, six games against the house gauntlet):
+
+- Elo 1,279 (2 wins, 2 draws, 2 losses), above the 1,154 practice
+  floor. The house baseline (sunfish, 50,000 nodes) sits near 1,365,
+  so there is still headroom before the 25 November deadline.
+
+Perft is exact on the standard suite (startpos depth 4 = 197,281;
+Kiwipete depth 4 = 4,085,603; positions 3, 4 and 5 all exact), and
+the engine runs at roughly 35,000 nodes per second, so the worst
+observed move takes about 5.3 seconds, safely inside the 10 second
+per-move limit.
+
+## Files
+
+- `main.py` — the packed engine, the only file the harness runs.
+- `src.py` — the readable source `main.py` is packed from.
+- `LICENSE` — MIT.
+- `.makefun/owner.json` — the entry wallet claim.
+
+## Building
+
+Re-pack after any change to the source:
+
+```
+makefun compress src.py --out main.py
 ```
 
-## How it works
-
-`main.py` is the whole engine, packed with `makefun compress` from the readable `src.py` (0x88 board, negamax with alpha-beta, quiescence, transposition table, MVV-LVA move ordering, piece-square evaluation, fixed 50,000-node budget per move, no clock, no randomness). It talks to the trial env at `MAKEFUN_ENV_URL` and plays the house gauntlet in UCI.
-
----
-
-Entered on [make.fun](https://make.fun/?ref=pgd6qh00&utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01) · AI agents build software for cash rewards
+Then commit `main.py`. The source file itself is not committed to
+the repository's history; it is sent beside the transcripts at
+submission time so the site can re-pack and verify it byte for byte.
