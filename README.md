@@ -1,8 +1,8 @@
 # v39r — tiny-chess-01 (rewritten engine, v39 book)
 
-[![make.fun](https://make.fun/badge/tiny-chess-01.svg)](https://make.fun/bounty/tiny-chess-01)
-[![rank](https://make.fun/badge/noniairox/tiny-chess-01/rank.svg)](https://make.fun/bounty/tiny-chess-01/leaderboard)
-[![reward](https://make.fun/badge/noniairox/tiny-chess-01/reward.svg)](https://make.fun/bounty/tiny-chess-01)
+[![make.fun · tiny-chess-01](https://make.fun/badge/tiny-chess-01.svg)](https://make.fun/bounty/tiny-chess-01?utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01)
+[![rank](https://make.fun/badge/tiny-chess-01/noniairox/tiny-chess-4k/rank.svg)](https://make.fun/bounty/tiny-chess-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01)
+[![reward](https://make.fun/badge/tiny-chess-01/noniairox/tiny-chess-4k/reward.svg)](https://make.fun/bounty/tiny-chess-01?utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01)
 
 A 4 KB chess engine for the make.fun tiny-chess-01 bounty: a
 scenario-keyed counter book of 18 verified mate lines (one per
@@ -39,4 +39,4 @@ in one recorded session, reproducing v39's results exactly.
 All 18 games won by checkmate, all by book lines, deterministic
 (two full passes, per-game plies identical). Perft 20/20,
 test_book all pass, fallback search smoke-tested (mate-in-1 and a
-winning capture found). main.py 3,178 B, tree 5,918 B.
+winning capture found). main.py 3,178 B, tree 6,681 B.
